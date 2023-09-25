@@ -1,34 +1,19 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/electron-vite.animate.svg";
-import "./App.css";
+import "./main.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://electron-vite.github.io" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <main className="flex flex-col justify-center items-center h-[100dvh] bg-slate-900 text-slate-100">
+      <p>Welcome to the</p>
+      <h1 className="text-5xl">Serenity House</h1>
+      <div className="pt-32">
+        <button
+          id="startZoom"
+          className="px-6 py-2 text-xl font-semibold tracking-wide text-center text-black transition duration-200 ease-in-out bg-orange-600 rounded-lg shadow-lg hover:shadow-xl hover:bg-orange-500 focus:outline-none focus:border-orange-700 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+        >
+          Start Hybrid Meeting
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </main>
   );
 }
 

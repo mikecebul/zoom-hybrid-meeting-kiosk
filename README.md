@@ -1,6 +1,6 @@
-# Serenity House Kiosk
+# Zoom Hybrid Meeting Kiosk
 
-Serenity House Kiosk is an Electron application designed to facilitate the starting of hybrid Zoom meetings at the Charlevoix Alano Club. This project leverages Vite for speedy development, TypeScript for static typing, and Tailwind CSS for utility-first styling.
+The Zoom hybrid meeting kiosk is an Electron application designed to facilitate the starting of hybrid Zoom meetings at the Charlevoix Alano Club. This project leverages Vite for speedy development, TypeScript for static typing, and Tailwind CSS for utility-first styling.
 
 ## Features
 
@@ -14,20 +14,22 @@ Serenity House Kiosk is an Electron application designed to facilitate the start
 ## Installation
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/mikecebul/zoom-hybrid-meeting-kiosk.git
 ```
-   
+
 2. Navigate to the project directory
+
 ```bash
 cd zoom-hybrid-meeting-kiosk
 ```
 
 3. Install dependencies
+
 ```bash
 pnpm install
 ```
-
 
 ## Development
 
@@ -60,4 +62,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgements
 
 - Charlevoix Alano Club for the initial motivation for this project.
-- Electron Forge, Vite, TypeScript, and Tailwind CSS for making this project possible.
+- Electron, Vite, TypeScript, and Tailwind CSS for making this project possible.
