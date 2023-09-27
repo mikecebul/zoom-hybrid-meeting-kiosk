@@ -3,6 +3,7 @@ import path from "node:path";
 import open from "open";
 import axios from "axios";
 import fs from "fs";
+import "./server"
 
 // The built directory structure
 //

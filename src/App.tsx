@@ -4,6 +4,12 @@ function App() {
   const startMeeting = () => {
     window.electronAPI?.startZoomMeeting();
   };
+
+  fetch('http://localhost:3001/test')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message)
+    })
   return (
     <main className="flex flex-col justify-center items-center h-[100dvh] bg-slate-900 text-slate-100">
       <p>Welcome to the</p>
