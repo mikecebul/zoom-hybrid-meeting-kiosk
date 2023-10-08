@@ -42,6 +42,7 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, "index.html"));
   }
+  win.setFullScreen(true)
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -72,6 +73,14 @@ ipcMain.on("start-zoom-meeting", async () => {
     await startZoomMeeting(token);
   }
 });
+
+ipcMain.on('meeting-ended', () => {
+  if (win) {
+    win.restore()
+    win.focus()
+    win.setFullScreen(true)
+  }
+})
 
 async function getZoomToken<T extends IZoomToken>(): Promise<T | undefined> {
   const accountId = import.meta.env.VITE_S2S_ACCOUNT_ID;
@@ -132,10 +141,11 @@ async function startZoomMeeting<T extends IZoomToken>(token: T) {
   } catch (error) {
     console.error("Error starting the meeting:", error);
     fs.writeFileSync(
-      "/home/mike/Documents/error-logs/start-meeting-error-log.txt",
+      "/Users/Shared/error-logs/start-meeting-error-log.txt",
       `Caught exception in startZoomMeeting: ${error}\n`
     );
   }
+  win?.minimize()
 }
 
 app.whenReady().then(createWindow);

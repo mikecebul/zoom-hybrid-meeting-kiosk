@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import crypto from 'crypto'
+import { ipcMain } from 'electron'
 
 const app = express()
 const PORT = 3001
@@ -49,6 +50,8 @@ app.post('/meeting-ended', (req, res) => {
   
       res.status(response.status).json(response);
     }
+
+    ipcMain.emit('meeting-ended')
   });
   
 
