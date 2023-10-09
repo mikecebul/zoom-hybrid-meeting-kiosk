@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from "electron";
+import { exec } from 'child_process';
 import path from "node:path";
 import open from "open";
 import axios from "axios";
@@ -63,6 +64,7 @@ app.on("activate", () => {
   }
 });
 
+
 interface IZoomToken {
   access_token: string;
 }
@@ -74,13 +76,31 @@ ipcMain.on("start-zoom-meeting", async () => {
   }
 });
 
-ipcMain.on('meeting-ended', () => {
-  if (win) {
-    win.restore()
-    win.focus()
-    win.setFullScreen(true)
-  }
+ipcMain.on('meeting-ended', () => { 
+  // Close Google Chrome and Zoom
+  killApplications(['Google Chrome', 'zoom.us']);
+
+    setTimeout(() => {
+      if (win) {
+        win.restore()
+        win.show()
+        win.setFullScreen(true)
+      }
+    }, 2000)
 })
+
+function killApplications(appNames: string[]) {
+  appNames.forEach((appName) => {
+    exec(`killall "${appName}"`, (error) => {
+      if (error) {
+        console.error(`Failed to kill ${appName}: ${error}`);
+        return;
+      }
+      // console.log(`stdout: ${stdout}`);
+      // console.error(`stderr: ${stderr}`);
+    });
+  });
+}
 
 async function getZoomToken<T extends IZoomToken>(): Promise<T | undefined> {
   const accountId = import.meta.env.VITE_S2S_ACCOUNT_ID;

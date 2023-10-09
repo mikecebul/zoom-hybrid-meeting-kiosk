@@ -46,11 +46,12 @@ app.post('/meeting-ended', (req, res) => {
     } else {
       response = { message: 'Unauthorized request to Zoom Webhook sample.', status: 401 };
   
-      console.log("Else Response", response.message);
+      console.log(response.message);
   
       res.status(response.status).json(response);
     }
 
+    console.log('Emitting meeting-ended event.');
     ipcMain.emit('meeting-ended')
   });
   
