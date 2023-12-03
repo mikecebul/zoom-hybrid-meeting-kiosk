@@ -78,16 +78,15 @@ ipcMain.on("start-zoom-meeting", async () => {
 });
 
 ipcMain.on('meeting-ended', () => { 
+  if (win) {
+    win.restore()
+    win.show()
+    win.setFullScreen(true)
+  }
+
   // Close Google Chrome and Zoom
   killApplications(['Google Chrome', 'zoom.us']);
 
-    setTimeout(() => {
-      if (win) {
-        win.restore()
-        win.show()
-        win.setFullScreen(true)
-      }
-    }, 2000)
 })
 
 function killApplications(appNames: string[]) {
