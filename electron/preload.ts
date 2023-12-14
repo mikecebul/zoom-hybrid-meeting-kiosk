@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
 
 contextBridge.exposeInMainWorld("electronAPI", {
   startZoomMeeting: () => ipcRenderer.send("start-zoom-meeting"),
+  startBODZoomMeeting: () => ipcRenderer.send("start-bod-zoom-meeting"),
 });
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

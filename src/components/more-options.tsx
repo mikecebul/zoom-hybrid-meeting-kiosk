@@ -11,8 +11,8 @@ import { MoreVertical } from "lucide-react";
 import { Tv2 } from "lucide-react";
 
 export function MoreOptions({ className }: { className: string }) {
-  const startZoomMeeting = () => {
-    window.electronAPI?.startZoomMeeting();
+  const startBODZoomMeeting = () => {
+    window.electronAPI?.startBODZoomMeeting();
   };
 
   return (
@@ -25,7 +25,7 @@ export function MoreOptions({ className }: { className: string }) {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>More Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={startZoomMeeting}>
+        <DropdownMenuItem onClick={startBODZoomMeeting}>
           <Tv2 className="w-4 h-4 mr-2" />
           <span>Start BOD Meeting</span>
         </DropdownMenuItem>

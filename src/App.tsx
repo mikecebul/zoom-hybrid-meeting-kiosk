@@ -8,11 +8,6 @@ function App() {
     window.electronAPI?.startZoomMeeting();
   };
 
-  fetch("http://localhost:3001/test")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data.message);
-    });
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-them">
       <main className="flex flex-col justify-center items-center h-[100dvh] bg-background">

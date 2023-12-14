@@ -1,10 +1,11 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import { exec } from 'child_process';
 import path from "node:path";
-import open from "open";
-import axios from "axios";
-import fs from "fs";
-import "./server"
+import "./server";
+import { killApplications } from "./utils/kill-applications";
+import { getMeetingZoomToken } from "./utils/meeting-room/get-meeting-zoom-token";
+import { startMeetingZoomMeeting } from "./utils/meeting-room/get-meeting-zoom-meeting";
+import { getBODZoomToken } from "./utils/BOD-room/get-bod-zoom-token";
+import { startBODZoomMeeting } from "./utils/BOD-room/get-bod-zoom-meeting";
 
 // The built directory structure
 //
@@ -23,6 +24,10 @@ process.env.VITE_PUBLIC = app.isPackaged
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
+
+type ActiveMeeting = "meeting" | "bod" | "none" | "both";
+
+let activeMeeting: ActiveMeeting = "none";
 
 function createWindow() {
   win = new BrowserWindow({
@@ -43,7 +48,7 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, "index.html"));
   }
-  win.setFullScreen(true)
+  win.setFullScreen(true);
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -64,115 +69,58 @@ app.on("activate", () => {
   }
 });
 
-
-interface IZoomToken {
-  access_token: string;
-}
-
 ipcMain.on("start-zoom-meeting", async () => {
-  killApplications(['Google Chrome', 'zoom.us']);
-  const token = await getZoomToken();
+  if (activeMeeting === "none") activeMeeting = "meeting";
+  if (activeMeeting === "bod") activeMeeting = "both";
+
+  killApplications(["Google Chrome", "zoom.us"]);
+
+  const token = await getMeetingZoomToken();
   if (token) {
-    await startZoomMeeting(token);
+    await startMeetingZoomMeeting(token);
+    win?.minimize();
   }
 });
 
-ipcMain.on('meeting-ended', () => { 
-  if (win) {
-    win.restore()
-    win.show()
-    win.setFullScreen(true)
-  }
+ipcMain.on("meeting-ended", () => {
+  if (activeMeeting === "meeting") {
+    activeMeeting = "none";
 
-  // Close Google Chrome and Zoom
-  killApplications(['Google Chrome', 'zoom.us']);
-
-})
-
-function killApplications(appNames: string[]) {
-  appNames.forEach((appName) => {
-    // CHeck if application is running
-    exec(`pgrep -i "${appName}"`, (error) => {
-      if (error) {
-        console.log(`${appName} is not running or an error occurred: ${error}`)
-      } else {
-        // Process found, kill it
-        exec(`killall "${appName}"`, (killError) => {
-          if (killError) {
-            console.log(`Failed to kill ${appName}: ${killError}`)
-          } else {
-            console.log(`${appName} has been killed successfully.`)
-          }
-        })
-      }
-    })
-  });
-}
-
-async function getZoomToken<T extends IZoomToken>(): Promise<T | undefined> {
-  const accountId = import.meta.env.VITE_S2S_ACCOUNT_ID;
-  const clientId = import.meta.env.VITE_S2S_CLIENT_ID;
-  const clientSecret = import.meta.env.VITE_S2S_CLIENT_SECRET;
-
-  const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
-    "base64"
-  );
-  const url = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${accountId}`;
-
-  try {
-    const response = await axios.post(
-      url,
-      {},
-      {
-        headers: {
-          Host: "zoom.us",
-          Authorization: `Basic ${base64Credentials}`,
-        },
-      }
-    );
-
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      console.log(`Failed to fetch, status: ${response.status}`);
-      return undefined;
+    if (win) {
+      win.restore();
+      win.show();
+      win.setFullScreen(true);
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    fs.writeFileSync(
-      "/home/mike/Documents/error-logs/start-meeting-error-log.txt",
-      `Axios Error during getZoomToken: ${error}\n`
-    );
-    return undefined;
+    killApplications(["Google Chrome", "zoom.us"]);
   }
-}
+  if (activeMeeting === "both") activeMeeting = "bod";
+});
 
-async function startZoomMeeting<T extends IZoomToken>(token: T) {
-  const meetingId = import.meta.env.VITE_MEETING_ID;
-  const bearerToken = token.access_token;
+// BOD Zoom Meeting Logic
+ipcMain.on("start-bod-zoom-meeting", async () => {
+  if (activeMeeting === "none") activeMeeting = "bod";
+  if (activeMeeting === "meeting") activeMeeting = "both";
 
-  const url = `https://api.zoom.us/v2/meetings/${meetingId}`;
+  killApplications(["Google Chrome", "zoom.us"]);
 
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    });
-    if (response.status === 200) {
-      const startUrl = response.data["start_url"];
-      console.log("Start Url:", startUrl);
-      open(startUrl);
+  const token = await getBODZoomToken();
+  if (token) {
+    await startBODZoomMeeting(token);
+    win?.minimize();
+  }
+});
+
+ipcMain.on("bod-meeting-ended", () => {
+  if (activeMeeting === "meeting") {
+    activeMeeting = "none";
+    if (win) {
+      win.restore();
+      win.show();
+      win.setFullScreen(true);
     }
-  } catch (error) {
-    console.error("Error starting the meeting:", error);
-    fs.writeFileSync(
-      "/Users/Shared/error-logs/start-meeting-error-log.txt",
-      `Caught exception in startZoomMeeting: ${error}\n`
-    );
-  }
-  win?.minimize()
-}
+    killApplications(["Google Chrome", "zoom.us"]);
+  }  
+  if (activeMeeting === "both") activeMeeting = "meeting";
+});
 
 app.whenReady().then(createWindow);
