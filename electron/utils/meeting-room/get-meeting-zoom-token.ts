@@ -5,9 +5,9 @@ import type { IZoomToken } from "../types";
 export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
   T | undefined
 > {
-  const accountId = import.meta.env.VITE_MEETING_S2S_ACCOUNT_ID;
-  const clientId = import.meta.env.VITE_MEETING_S2S_CLIENT_ID;
-  const clientSecret = import.meta.env.VITE_MEETING_S2S_CLIENT_SECRET;
+  const accountId = import.meta.env.VITE_S2S_MEETING_ACCOUNT_ID;
+  const clientId = import.meta.env.VITE_S2S_MEETING_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_S2S_MEETING_CLIENT_SECRET;
 
   const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
