@@ -1,6 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import type { IZoomToken } from "../types";
+import open from "open";
 
 export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
   const meetingId = import.meta.env.VITE_MEEITNG_MEETING_ID;
