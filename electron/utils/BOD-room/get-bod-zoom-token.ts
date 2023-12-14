@@ -5,9 +5,9 @@ import type { IZoomToken } from "../types";
 export async function getBODZoomToken<T extends IZoomToken>(): Promise<
   T | undefined
 > {
-  const accountId = import.meta.env.VITE_BOD_S2S_ACCOUNT_ID;
-  const clientId = import.meta.env.VITE_BOD_S2S_CLIENT_ID;
-  const clientSecret = import.meta.env.VITE_BOD_S2S_CLIENT_SECRET;
+  const accountId = import.meta.env.VITE_S2S_BOD_ACCOUNT_ID;
+  const clientId = import.meta.env.VITE_S2S_BOD_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_S2S_BOD_CLIENT_SECRET;
 
   const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
