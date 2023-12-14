@@ -111,7 +111,7 @@ ipcMain.on("start-bod-zoom-meeting", async () => {
 });
 
 ipcMain.on("bod-meeting-ended", () => {
-  if (activeMeeting === "meeting") {
+  if (activeMeeting === "bod") {
     activeMeeting = "none";
     if (win) {
       win.restore();
