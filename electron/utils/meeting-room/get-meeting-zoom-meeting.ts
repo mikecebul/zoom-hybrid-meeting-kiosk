@@ -3,7 +3,7 @@ import fs from "fs";
 import type { IZoomToken } from "../types";
 
 export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
-  const meetingId = import.meta.env.VITE_MEEITNG_MEETING_ID;
+  const meetingId = import.meta.env.VITE_MEETING_MEETING_ID;
   const bearerToken = token.access_token;
 
   const url = `https://api.zoom.us/v2/meetings/${meetingId}`;
