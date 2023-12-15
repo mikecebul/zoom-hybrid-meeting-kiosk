@@ -73,7 +73,7 @@ ipcMain.on("start-zoom-meeting", async () => {
   if (activeMeeting === "none") activeMeeting = "meeting";
   if (activeMeeting === "bod") activeMeeting = "both";
 
-  // killApplications(["Google Chrome", "zoom.us"]);
+  killApplications(["Google Chrome", "zoom.us"]);
 
   const token = await getMeetingZoomToken();
   if (typeof token?.access_token === "string") {
