@@ -21,14 +21,16 @@ export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
       console.log("Start Url:", startUrl);
       open(startUrl);
     }
+    return true
   } catch (error) {
     console.error("Error starting the meeting:", error);
 
-    if (process.platform !== "darwin") {
+    if (process.platform === "darwin") {
       fs.writeFileSync(
         "/Users/Shared/error-logs/start-meeting-error-log.txt",
         `Caught exception in startZoomMeeting: ${error}\n`
       );
     }
+    return false
   }
 }

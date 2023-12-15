@@ -27,6 +27,7 @@ export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
     );
 
     if (response.status === 200) {
+      console.log("Token", response.data)
       return response.data;
     } else {
       console.log(`Failed to fetch, status: ${response.status}`);
@@ -35,7 +36,7 @@ export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
   } catch (error) {
     console.error("Error fetching data:", error);
 
-    if (process.platform !== "darwin") {
+    if (process.platform === "darwin") {
       fs.writeFileSync(
         "/home/mike/Documents/error-logs/get-meeting-zoom-token-error-log.txt",
         `Axios Error during getZoomToken: ${error}\n`

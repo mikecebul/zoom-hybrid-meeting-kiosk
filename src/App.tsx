@@ -1,11 +1,40 @@
+import { useState } from "react";
 import { MoreOptions } from "./components/more-options";
 import { ThemeProvider } from "./components/theme-provider";
 import { Button } from "./components/ui/button";
+import { Loader2 } from "lucide-react";
 import "./main.css";
+import { Toaster } from "./components/ui/toaster";
+import { useToast } from "./components/ui/use-toast";
 
 function App() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+
+  const handleMeetingStart = () => {
+    setIsLoading(false);
+    // Remove both listeners
+    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
+    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
+  };
+
+  const handleMeetingFailed = () => {
+    setIsLoading(false);
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: "Please try again.",
+    });
+    // Remove both listeners
+    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
+    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
+  };
+
   const startMeeting = () => {
+    setIsLoading(true);
     window.electronAPI?.startZoomMeeting();
+    window.electronAPI?.onZoomMeetingStarted(handleMeetingStart);
+    window.electronAPI?.onZoomMeetingFailed(handleMeetingFailed);
   };
 
   return (
@@ -19,11 +48,17 @@ function App() {
           </h1>
         </div>
         <div className="pt-16 lg:pt-32">
-          <Button variant="meeting" size="xl" onClick={startMeeting}>
-            Start Hybrid Meeting
+          <Button
+            disabled={isLoading}
+            variant="meeting"
+            size="xl"
+            onClick={startMeeting}
+          >
+            {isLoading ? <Loader2 /> : "Start Hybrid Meeting"}
           </Button>
         </div>
       </main>
+      <Toaster />
     </ThemeProvider>
   );
 }

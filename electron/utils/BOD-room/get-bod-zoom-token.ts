@@ -35,7 +35,7 @@ export async function getBODZoomToken<T extends IZoomToken>(): Promise<
   } catch (error) {
     console.error("Error fetching data:", error);
 
-    if (process.platform !== "darwin") {
+    if (process.platform === "darwin") {
       fs.writeFileSync(
         "/home/mike/Documents/error-logs/get-meeting-zoom-token-error-log.txt",
         `Axios Error during getZoomToken: ${error}\n`

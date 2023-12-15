@@ -4,8 +4,27 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  // Regular Zoom Meeting
   startZoomMeeting: () => ipcRenderer.send("start-zoom-meeting"),
+  onZoomMeetingStarted: (callback: () => void) =>
+    ipcRenderer.on("zoom-meeting-started", callback),
+  onZoomMeetingFailed: (callback: () => void) =>
+    ipcRenderer.on("zoom-meeting-failed", callback),
+  removeZoomMeetingStartedListener: (callback: () => void) =>
+    ipcRenderer.removeListener("zoom-meeting-started", callback),
+  removeZoomMeetingFailedListener: (callback: () => void) =>
+    ipcRenderer.removeListener("zoom-meeting-failed", callback),
+
+  //  BOD Zoom Meeting
   startBODZoomMeeting: () => ipcRenderer.send("start-bod-zoom-meeting"),
+  onBODZoomMeetingStarted: (callback: () => void) =>
+    ipcRenderer.on("bod-zoom-meeting-started", callback),
+  onBODZoomMeetingFailed: (callback: () => void) =>
+    ipcRenderer.on("bod-zoom-meeting-failed", callback),
+  removeBODZoomMeetingStartedListener: (callback: () => void) =>
+    ipcRenderer.removeListener("bod-zoom-meeting-started", callback),
+  removeBODZoomMeetingFailedListener: (callback: () => void) =>
+    ipcRenderer.removeListener("bod-zoom-meeting-failed", callback),
 });
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

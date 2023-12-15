@@ -48,7 +48,7 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, "index.html"));
   }
-  win.setFullScreen(true);
+  // win.setFullScreen(true);
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -73,12 +73,21 @@ ipcMain.on("start-zoom-meeting", async () => {
   if (activeMeeting === "none") activeMeeting = "meeting";
   if (activeMeeting === "bod") activeMeeting = "both";
 
-  killApplications(["Google Chrome", "zoom.us"]);
+  // killApplications(["Google Chrome", "zoom.us"]);
 
   const token = await getMeetingZoomToken();
-  if (token) {
-    await startMeetingZoomMeeting(token);
-    win?.minimize();
+  if (typeof token?.access_token === "string") {
+    const success = await startMeetingZoomMeeting(token);
+    if (success) {
+      win?.minimize();
+      win?.webContents.send("zoom-meeting-started");
+    }
+    if (!success) {
+      console.log("Error handling reached:", success);
+      win?.webContents.send("zoom-meeting-failed");
+    }
+  } else {
+    win?.webContents.send("zoom-meeting-failed");
   }
 });
 
@@ -104,9 +113,16 @@ ipcMain.on("start-bod-zoom-meeting", async () => {
   killApplications(["Google Chrome", "zoom.us"]);
 
   const token = await getBODZoomToken();
-  if (token) {
-    await startBODZoomMeeting(token);
-    win?.minimize();
+  if (typeof token?.access_token === "string") {
+    const success = await startBODZoomMeeting(token);
+    if (success) {
+      win?.minimize();
+      win?.webContents.send("bod-zoom-meeting-started");
+    } else {
+      win?.webContents.send("bod-zoom-meeting-failed");
+    }
+  } else {
+    win?.webContents.send("bod-zoom-meeeting-failed");
   }
 });
 
@@ -119,7 +135,7 @@ ipcMain.on("bod-meeting-ended", () => {
       win.setFullScreen(true);
     }
     killApplications(["Google Chrome", "zoom.us"]);
-  }  
+  }
   if (activeMeeting === "both") activeMeeting = "meeting";
 });
 

@@ -7,12 +7,55 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
+import { Loader2, MoreVertical } from "lucide-react";
 import { Tv2 } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "./ui/use-toast";
 
 export function MoreOptions({ className }: { className: string }) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+
+  // const startBODZoomMeeting = () => {
+  //   setIsLoading(true);
+  //   window.electronAPI?.startBODZoomMeeting();
+  //   window.electronAPI?.onBODZoomMeetingStarted(() => {
+  //     setIsLoading(false);
+  //   });
+
+    // window.electronAPI?.onZoomMeetingFailed(() => {
+    //   setIsLoading(false);
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Uh oh! Something went wrong.",
+    //     description: "Please try again.",
+    //   });
+    // });
+  // };
+  const handleMeetingStart = () => {
+    setIsLoading(false);
+    // Remove both listeners
+    window.electronAPI?.removeBODZoomMeetingStartedListener(handleMeetingStart);
+    window.electronAPI?.removeBODZoomMeetingFailedListener(handleMeetingFailed);
+  };
+
+  const handleMeetingFailed = () => {
+    setIsLoading(false);
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: "Please try again.",
+    });
+    // Remove both listeners
+    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
+    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
+  };
+
   const startBODZoomMeeting = () => {
+    setIsLoading(true);
     window.electronAPI?.startBODZoomMeeting();
+    window.electronAPI?.onBODZoomMeetingStarted(handleMeetingStart);
+    window.electronAPI?.onZoomMeetingFailed(handleMeetingFailed);
   };
 
   return (
@@ -27,7 +70,9 @@ export function MoreOptions({ className }: { className: string }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={startBODZoomMeeting}>
           <Tv2 className="w-4 h-4 mr-2" />
-          <span>Start BOD Meeting</span>
+          <span>
+            {isLoading ? <Loader2 className="w-4 h-4" /> : "Start BOD Meeting"}
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

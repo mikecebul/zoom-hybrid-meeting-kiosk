@@ -1,7 +1,7 @@
 {
   "name": "zoom-hybrid-meeting-kiosk",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "MikeCebul",
   "description": "Hybrid meeting kiosk used on MacOS at a medium sized Alano Club",
   "scripts": {
@@ -13,6 +13,7 @@
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.5",
     "axios": "^1.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
