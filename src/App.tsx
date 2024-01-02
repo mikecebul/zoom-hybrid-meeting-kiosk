@@ -11,30 +11,24 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  const handleMeetingStart = () => {
-    setIsLoading(false);
-    // Remove both listeners
-    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
-    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
-  };
-
-  const handleMeetingFailed = () => {
+  function meetingFailedToast() {
     setIsLoading(false);
     toast({
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
       description: "Please try again.",
     });
-    // Remove both listeners
-    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
-    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
-  };
+  }
 
-  const startMeeting = () => {
+  const startMeeting = async () => {
     setIsLoading(true);
-    window.electronAPI?.startZoomMeeting();
-    window.electronAPI?.onZoomMeetingStarted(handleMeetingStart);
-    window.electronAPI?.onZoomMeetingFailed(handleMeetingFailed);
+    const meetingStarted = await window.electronAPI?.startZoomMeeting();
+    if (meetingStarted) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+      meetingFailedToast();
+    }
   };
 
   return (

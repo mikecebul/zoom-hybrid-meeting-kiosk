@@ -1,10 +1,10 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../types";
+import type { IZoomToken } from "../../utils/types";
 import open from "open";
 
-export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
-  const meetingId = import.meta.env.VITE_MEETING_MEETING_ID;
+export async function launchBODZoomMeeting<T extends IZoomToken>(token: T) {
+  const meetingId = import.meta.env.VITE_BOD_MEETING_ID;
   const bearerToken = token.access_token;
 
   const url = `https://api.zoom.us/v2/meetings/${meetingId}`;
@@ -21,7 +21,7 @@ export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
       console.log("Start Url:", startUrl);
       open(startUrl);
     }
-    return true
+    return true;
   } catch (error) {
     console.error("Error starting the meeting:", error);
 
@@ -31,6 +31,6 @@ export async function startMeetingZoomMeeting<T extends IZoomToken>(token: T) {
         `Caught exception in startZoomMeeting: ${error}\n`
       );
     }
-    return false
+    return false;
   }
 }

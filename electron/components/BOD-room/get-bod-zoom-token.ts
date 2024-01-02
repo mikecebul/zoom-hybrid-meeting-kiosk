@@ -1,6 +1,6 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../types";
+import type { IZoomToken } from "../../utils/types";
 
 export async function getBODZoomToken<T extends IZoomToken>(): Promise<
   T | undefined

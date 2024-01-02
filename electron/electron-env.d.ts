@@ -25,15 +25,7 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import("electron").IpcRenderer;
   electronAPI?: {
-    startZoomMeeting: () => void;
-    onZoomMeetingStarted: (callback: () => void) => void;
-    startBODZoomMeeting: () => void;
-    onBODZoomMeetingStarted: (callback: () => void) => void;
-    onZoomMeetingFailed: (callback: () => void) => void;
-    removeZoomMeetingStartedListener: (callback: () => void) => void;
-    removeZoomMeetingFailedListener: (callback: () => void) => void;
-    onBODZoomMeetingFailed: (callback: () => void) => void;
-    removeBODZoomMeetingStartedListener: (callback: () => void) => void;
-    removeBODZoomMeetingFailedListener: (callback: () => void) => void;
+    startZoomMeeting: () => Promise<boolean>;
+    startBODZoomMeeting: () => Promise<boolean>;
   };
 }

@@ -16,46 +16,23 @@ export function MoreOptions({ className }: { className: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  // const startBODZoomMeeting = () => {
-  //   setIsLoading(true);
-  //   window.electronAPI?.startBODZoomMeeting();
-  //   window.electronAPI?.onBODZoomMeetingStarted(() => {
-  //     setIsLoading(false);
-  //   });
-
-    // window.electronAPI?.onZoomMeetingFailed(() => {
-    //   setIsLoading(false);
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Uh oh! Something went wrong.",
-    //     description: "Please try again.",
-    //   });
-    // });
-  // };
-  const handleMeetingStart = () => {
-    setIsLoading(false);
-    // Remove both listeners
-    window.electronAPI?.removeBODZoomMeetingStartedListener(handleMeetingStart);
-    window.electronAPI?.removeBODZoomMeetingFailedListener(handleMeetingFailed);
-  };
-
-  const handleMeetingFailed = () => {
-    setIsLoading(false);
+  function meetingFailedToast() {
     toast({
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
       description: "Please try again.",
     });
-    // Remove both listeners
-    window.electronAPI?.removeZoomMeetingStartedListener(handleMeetingStart);
-    window.electronAPI?.removeZoomMeetingFailedListener(handleMeetingFailed);
-  };
+  }
 
-  const startBODZoomMeeting = () => {
+  const startBODZoomMeeting = async () => {
     setIsLoading(true);
-    window.electronAPI?.startBODZoomMeeting();
-    window.electronAPI?.onBODZoomMeetingStarted(handleMeetingStart);
-    window.electronAPI?.onZoomMeetingFailed(handleMeetingFailed);
+    const meetingStarted = await window.electronAPI?.startBODZoomMeeting();
+    if (meetingStarted) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+      meetingFailedToast();
+    }
   };
 
   return (

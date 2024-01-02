@@ -12,9 +12,6 @@ app.use(express.json());
 app.post("/meeting-ended", (req, res) => {
   let response;
 
-  console.log("Headers:", req.headers);
-  console.log("Body:", req.body);
-
   const message = `v0:${req.headers["x-zm-request-timestamp"]}:${JSON.stringify(
     req.body
   )}`;
@@ -39,16 +36,12 @@ app.post("/meeting-ended", (req, res) => {
         status: 200,
       };
 
-      console.log("Message:", response.message);
-
       res.status(response.status).json(response.message);
     } else {
       response = {
         message: "Authorized request to Zoom Meeting Webhook.",
         status: 200,
       };
-
-      console.log(response.message);
 
       res.status(response.status).json(response);
 
@@ -60,20 +53,13 @@ app.post("/meeting-ended", (req, res) => {
       status: 401,
     };
 
-    console.log(response.message);
-
     res.status(response.status).json(response);
   }
-
-  console.log("Emitting meeting-ended event.");
   ipcMain.emit("meeting-ended");
 });
 
 app.post("/bod-meeting-ended", (req, res) => {
   let response;
-
-  console.log("Headers:", req.headers);
-  console.log("Body:", req.body);
 
   const message = `v0:${req.headers["x-zm-request-timestamp"]}:${JSON.stringify(
     req.body
@@ -99,16 +85,12 @@ app.post("/bod-meeting-ended", (req, res) => {
         status: 200,
       };
 
-      console.log("Message:", response.message);
-
       res.status(response.status).json(response.message);
     } else {
       response = {
         message: "Authorized request to Zoom BOD webhook.",
         status: 200,
       };
-
-      console.log(response.message);
 
       res.status(response.status).json(response);
 
@@ -120,12 +102,8 @@ app.post("/bod-meeting-ended", (req, res) => {
       status: 401,
     };
 
-    console.log(response.message);
-
     res.status(response.status).json(response);
   }
-
-  console.log("Emitting bod-meeting-ended event.");
   ipcMain.emit("bod-meeting-ended");
 });
 

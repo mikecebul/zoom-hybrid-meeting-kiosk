@@ -1,10 +1,10 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../types";
+import type { IZoomToken } from "../../utils/types";
 import open from "open";
 
-export async function startBODZoomMeeting<T extends IZoomToken>(token: T) {
-  const meetingId = import.meta.env.VITE_BOD_MEETING_ID;
+export async function launchZoomMeeting<T extends IZoomToken>(token: T) {
+  const meetingId = import.meta.env.VITE_MEETING_MEETING_ID;
   const bearerToken = token.access_token;
 
   const url = `https://api.zoom.us/v2/meetings/${meetingId}`;

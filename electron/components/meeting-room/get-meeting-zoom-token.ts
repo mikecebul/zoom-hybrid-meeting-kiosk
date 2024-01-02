@@ -1,6 +1,6 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../types";
+import type { IZoomToken } from "../../utils/types";
 
 export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
   T | undefined
@@ -27,7 +27,7 @@ export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
     );
 
     if (response.status === 200) {
-      console.log("Token", response.data)
+      console.log("Token", response.data);
       return response.data;
     } else {
       console.log(`Failed to fetch, status: ${response.status}`);

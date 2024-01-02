@@ -2,10 +2,8 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import "./server";
 import { killApplications } from "./utils/kill-applications";
-import { getMeetingZoomToken } from "./utils/meeting-room/get-meeting-zoom-token";
-import { startMeetingZoomMeeting } from "./utils/meeting-room/get-meeting-zoom-meeting";
-import { getBODZoomToken } from "./utils/BOD-room/get-bod-zoom-token";
-import { startBODZoomMeeting } from "./utils/BOD-room/get-bod-zoom-meeting";
+import { startZoomMeeting } from "./components/meeting-room/startZoomMeeting";
+import { startBODZoomMeeting } from "./components/BOD-room/startBODZoomMeeting";
 
 // The built directory structure
 //
@@ -24,10 +22,6 @@ process.env.VITE_PUBLIC = app.isPackaged
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-
-type ActiveMeeting = "meeting" | "bod" | "none" | "both";
-
-let activeMeeting: ActiveMeeting = "none";
 
 function createWindow() {
   win = new BrowserWindow({
@@ -54,89 +48,50 @@ function createWindow() {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-    win = null;
-  }
-});
+app.whenReady().then(() => {
+  createWindow();
 
-app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
-ipcMain.on("start-zoom-meeting", async () => {
-  if (activeMeeting === "none") activeMeeting = "meeting";
-  if (activeMeeting === "bod") activeMeeting = "both";
-
-  killApplications(["Google Chrome", "zoom.us"]);
-
-  const token = await getMeetingZoomToken();
-  if (typeof token?.access_token === "string") {
-    const success = await startMeetingZoomMeeting(token);
-    if (success) {
-      win?.minimize();
-      win?.webContents.send("zoom-meeting-started");
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
+      win = null;
     }
-    if (!success) {
-      console.log("Error handling reached:", success);
-      win?.webContents.send("zoom-meeting-failed");
+  });
+
+  app.on("activate", () => {
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
     }
-  } else {
-    win?.webContents.send("zoom-meeting-failed");
-  }
-});
+  });
 
-ipcMain.on("meeting-ended", () => {
-  if (activeMeeting === "meeting") {
-    activeMeeting = "none";
+  ipcMain.handle("start-zoom-meeting", async () => {
+    if (win) {
+      return await startZoomMeeting(win);
+    }
+  });
+  ipcMain.handle("start-BOD-zoom-meeting", async () => {
+    if (win) {
+      return await startBODZoomMeeting(win);
+    }
+  });
 
+  ipcMain.on("meeting-ended", () => {
     if (win) {
       win.restore();
       win.show();
       win.setFullScreen(true);
     }
     killApplications(["Google Chrome", "zoom.us"]);
-  }
-  if (activeMeeting === "both") activeMeeting = "bod";
-});
+  });
 
-// BOD Zoom Meeting Logic
-ipcMain.on("start-bod-zoom-meeting", async () => {
-  if (activeMeeting === "none") activeMeeting = "bod";
-  if (activeMeeting === "meeting") activeMeeting = "both";
-
-  killApplications(["Google Chrome", "zoom.us"]);
-
-  const token = await getBODZoomToken();
-  if (typeof token?.access_token === "string") {
-    const success = await startBODZoomMeeting(token);
-    if (success) {
-      win?.minimize();
-      win?.webContents.send("bod-zoom-meeting-started");
-    } else {
-      win?.webContents.send("bod-zoom-meeting-failed");
-    }
-  } else {
-    win?.webContents.send("bod-zoom-meeeting-failed");
-  }
-});
-
-ipcMain.on("bod-meeting-ended", () => {
-  if (activeMeeting === "bod") {
-    activeMeeting = "none";
+  ipcMain.on("bod-meeting-ended", () => {
     if (win) {
       win.restore();
       win.show();
       win.setFullScreen(true);
     }
     killApplications(["Google Chrome", "zoom.us"]);
-  }
-  if (activeMeeting === "both") activeMeeting = "meeting";
+  });
 });
-
-app.whenReady().then(createWindow);
