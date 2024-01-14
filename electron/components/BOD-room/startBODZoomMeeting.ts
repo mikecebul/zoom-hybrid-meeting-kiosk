@@ -11,9 +11,8 @@ export async function startBODZoomMeeting(win: BrowserWindow) {
     const success = await launchBODZoomMeeting(token);
     if (success) {
       win?.minimize();
-      return true;
+      return { meetingLaunched: true, activeMeeting: true };
     }
-  } else {
-    return false;
   }
+  return { meetingLaunched: false, activeMeeting: false };
 }

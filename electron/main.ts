@@ -22,6 +22,7 @@ process.env.VITE_PUBLIC = app.isPackaged
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
+let activeMeeting = false
 
 function createWindow() {
   win = new BrowserWindow({
@@ -68,30 +69,37 @@ app.whenReady().then(() => {
 
   ipcMain.handle("start-zoom-meeting", async () => {
     if (win) {
-      return await startZoomMeeting(win);
+      const result = await startZoomMeeting(win)
+      activeMeeting = result.activeMeeting
+      return result.meetingLaunched
     }
   });
+
   ipcMain.handle("start-BOD-zoom-meeting", async () => {
     if (win) {
-      return await startBODZoomMeeting(win);
+      const result = await startBODZoomMeeting(win)
+      activeMeeting = result.activeMeeting
+      return result.meetingLaunched
     }
   });
 
   ipcMain.on("meeting-ended", () => {
-    if (win) {
+    if (win && activeMeeting) {
+      activeMeeting = false
       win.restore();
       win.show();
       win.setFullScreen(true);
+      killApplications(["Google Chrome", "zoom.us"]);
     }
-    killApplications(["Google Chrome", "zoom.us"]);
   });
 
   ipcMain.on("bod-meeting-ended", () => {
-    if (win) {
+    if (win && activeMeeting) {
+      activeMeeting = false
       win.restore();
       win.show();
       win.setFullScreen(true);
+      killApplications(["Google Chrome", "zoom.us"]);
     }
-    killApplications(["Google Chrome", "zoom.us"]);
   });
 });
