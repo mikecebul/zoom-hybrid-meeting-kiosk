@@ -23,6 +23,7 @@ let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 let activeMeeting = false
+let activeBODMeeting = false
 
 function createWindow() {
   win = new BrowserWindow({
@@ -78,7 +79,7 @@ app.whenReady().then(() => {
   ipcMain.handle("start-BOD-zoom-meeting", async () => {
     if (win) {
       const result = await startBODZoomMeeting(win)
-      activeMeeting = result.activeMeeting
+      activeBODMeeting = result.activeBODMeeting
       return result.meetingLaunched
     }
   });
@@ -94,8 +95,8 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on("bod-meeting-ended", () => {
-    if (win && activeMeeting) {
-      activeMeeting = false
+    if (win && activeBODMeeting) {
+      activeBODMeeting = false
       win.restore();
       win.show();
       win.setFullScreen(true);
