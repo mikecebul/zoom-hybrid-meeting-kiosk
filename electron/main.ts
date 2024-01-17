@@ -22,8 +22,8 @@ process.env.VITE_PUBLIC = app.isPackaged
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-let activeMeeting = false
-let activeBODMeeting = false
+let activeMeeting = false;
+let activeBODMeeting = false;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -70,23 +70,23 @@ app.whenReady().then(() => {
 
   ipcMain.handle("start-zoom-meeting", async () => {
     if (win) {
-      const result = await startZoomMeeting(win)
-      activeMeeting = result.activeMeeting
-      return result.meetingLaunched
+      const result = await startZoomMeeting(win);
+      activeMeeting = result.activeMeeting;
+      return result.meetingLaunched;
     }
   });
 
-  ipcMain.handle("start-BOD-zoom-meeting", async () => {
+  ipcMain.handle("start-bod-zoom-meeting", async () => {
     if (win) {
-      const result = await startBODZoomMeeting(win)
-      activeBODMeeting = result.activeBODMeeting
-      return result.meetingLaunched
+      const result = await startBODZoomMeeting(win);
+      activeBODMeeting = result.activeBODMeeting;
+      return result.meetingLaunched;
     }
   });
 
   ipcMain.on("meeting-ended", () => {
     if (win && activeMeeting) {
-      activeMeeting = false
+      activeMeeting = false;
       win.restore();
       win.show();
       win.setFullScreen(true);
@@ -96,7 +96,7 @@ app.whenReady().then(() => {
 
   ipcMain.on("bod-meeting-ended", () => {
     if (win && activeBODMeeting) {
-      activeBODMeeting = false
+      activeBODMeeting = false;
       win.restore();
       win.show();
       win.setFullScreen(true);

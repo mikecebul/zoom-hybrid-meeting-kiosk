@@ -11,7 +11,7 @@ export async function startBODZoomMeeting(win: BrowserWindow) {
     const success = await launchBODZoomMeeting(token);
     if (success) {
       win?.minimize();
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       return { meetingLaunched: true, activeBODMeeting: true };
     }
   }
