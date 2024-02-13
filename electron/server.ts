@@ -46,6 +46,7 @@ app.post("/meeting-ended", (req, res) => {
       res.status(response.status).json(response);
 
       // Business logic here, e.g., make API request to Zoom or 3rd party
+      ipcMain.emit("meeting-ended");
     }
   } else {
     response = {
@@ -55,7 +56,6 @@ app.post("/meeting-ended", (req, res) => {
 
     res.status(response.status).json(response);
   }
-  ipcMain.emit("meeting-ended");
 });
 
 app.post("/bod-meeting-ended", (req, res) => {
@@ -95,6 +95,7 @@ app.post("/bod-meeting-ended", (req, res) => {
       res.status(response.status).json(response);
 
       // Business logic here, e.g., make API request to Zoom or 3rd party
+      ipcMain.emit("bod-meeting-ended");
     }
   } else {
     response = {
@@ -104,7 +105,6 @@ app.post("/bod-meeting-ended", (req, res) => {
 
     res.status(response.status).json(response);
   }
-  ipcMain.emit("bod-meeting-ended");
 });
 
 app.listen(PORT, () => {
