@@ -90,7 +90,7 @@ app.whenReady().then(() => {
       win.restore();
       win.show();
       win.setFullScreen(true);
-      killApplications(["Google Chrome", "zoom.us"]);
+      killApplications(["Google Chrome", "zoom.us", "Safari"]);
     }
   });
 
@@ -100,7 +100,7 @@ app.whenReady().then(() => {
       win.restore();
       win.show();
       win.setFullScreen(true);
-      killApplications(["Google Chrome", "zoom.us"]);
+      killApplications(["Google Chrome", "zoom.us", "Safari"]);
     }
   });
 });

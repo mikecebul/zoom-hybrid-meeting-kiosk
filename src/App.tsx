@@ -48,7 +48,7 @@ function App() {
             size="xl"
             onClick={startMeeting}
           >
-            {isLoading ? <Loader2 /> : "Start Hybrid Meeting"}
+            {isLoading ? <Loader2 className="animate-spin"/> : "Start Hybrid Meeting"}
           </Button>
         </div>
       </main>

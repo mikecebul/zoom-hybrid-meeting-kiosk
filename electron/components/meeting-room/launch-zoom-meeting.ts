@@ -1,7 +1,9 @@
 import axios from "axios";
 import fs from "fs";
 import type { IZoomToken } from "../../utils/types";
-import open from "open";
+//import { shell } from "electron";
+import { exec } from "child_process";
+// import open from "open";
 
 export async function launchZoomMeeting<T extends IZoomToken>(token: T) {
   const meetingId = import.meta.env.VITE_MEETING_MEETING_ID;
@@ -18,8 +20,10 @@ export async function launchZoomMeeting<T extends IZoomToken>(token: T) {
     });
     if (response.status === 200) {
       const startUrl = response.data["start_url"];
-      console.log("Start Url:", startUrl);
-      open(startUrl);
+      // console.log("Start Url:", startUrl);
+      // open(startUrl);
+      // shell.openExternal(startUrl, { activate: false, })
+      openUrlInSafari(startUrl)
     }
     return true;
   } catch (error) {
@@ -33,4 +37,15 @@ export async function launchZoomMeeting<T extends IZoomToken>(token: T) {
     }
     return false;
   }
+}
+
+function openUrlInSafari(url: string) {
+  exec(`open -a Safari "${url}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+  });
 }
