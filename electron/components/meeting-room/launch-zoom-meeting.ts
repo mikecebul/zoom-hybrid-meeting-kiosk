@@ -40,12 +40,10 @@ export async function launchZoomMeeting<T extends IZoomToken>(token: T) {
 }
 
 function openUrlInSafari(url: string) {
-  exec(`open -a Safari "${url}"`, (error, stdout, stderr) => {
+  exec(`open -a Safari "${url}"`, (error) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
     }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
   });
 }

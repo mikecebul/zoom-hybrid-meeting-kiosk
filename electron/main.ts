@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
 import "./server";
 import { killApplications } from "./utils/kill-applications";
@@ -30,6 +30,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, "icon.icns"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
 
@@ -103,4 +105,13 @@ app.whenReady().then(() => {
       killApplications(["Google Chrome", "zoom.us", "Safari"]);
     }
   });
+  ipcMain.handle("open-na-readings", () => {
+    const naReadingsURL = 'https://drive.google.com/file/d/1ufMklUrLiIZso3kLuP2mn_6zt8FE8RrF/view?usp=sharing'
+    try {
+      shell.openExternal(naReadingsURL)
+      return
+  } catch {
+    return false
+  }
+  })
 });

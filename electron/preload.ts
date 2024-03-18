@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer, shell } from "electron";
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
@@ -6,6 +6,8 @@ contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
 contextBridge.exposeInMainWorld("electronAPI", {
   startZoomMeeting: () => ipcRenderer.invoke("start-zoom-meeting"),
   startBODZoomMeeting: () => ipcRenderer.invoke("start-bod-zoom-meeting"),
+  openPDF: (path: string) => shell.openPath(path),
+  openNAReadings: () => ipcRenderer.invoke("open-na-readings")
 });
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

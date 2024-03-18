@@ -27,5 +27,7 @@ interface Window {
   electronAPI?: {
     startZoomMeeting: () => Promise<boolean>;
     startBODZoomMeeting: () => Promise<boolean>;
+    openPDF: (path: string) => Promise<void>;
+    openNAReadings: () => Promise<boolean>;
   };
 }
