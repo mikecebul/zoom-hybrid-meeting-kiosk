@@ -1,7 +1,7 @@
 {
   "name": "zoom-hybrid-meeting-kiosk",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.3.4",
   "author": "MikeCebul",
   "description": "Hybrid meeting kiosk used on MacOS at a medium sized Alano Club",
   "scripts": {
