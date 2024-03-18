@@ -7,7 +7,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Loader2, Tv2 } from "lucide-react";
 import { FileText, MoreVertical } from "lucide-react";
 // import { useState } from "react";
 // import { useToast } from "./ui/use-toast";
