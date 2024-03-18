@@ -107,7 +107,9 @@ app.whenReady().then(() => {
   });
   ipcMain.handle("open-na-readings", () => {
     const naReadingsURL = 'https://drive.google.com/file/d/1ufMklUrLiIZso3kLuP2mn_6zt8FE8RrF/view?usp=sharing'
+    const naJFTURL = 'https://www.jftna.org/jft/'
     try {
+      shell.openExternal(naJFTURL)
       shell.openExternal(naReadingsURL)
       return
   } catch {
