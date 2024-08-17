@@ -15,6 +15,8 @@ export async function startZoomMeeting(win: BrowserWindow) {
         win?.minimize();
         await new Promise(resolve => setTimeout(resolve, 2000));
         return {meetingLaunched: true, activeMeeting: true}
+      } else {
+        return {meetingLaunched: false, activeMeeting: false, errorMsg: token?.error}
       }
     }
   }

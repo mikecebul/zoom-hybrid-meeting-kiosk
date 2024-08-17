@@ -26,7 +26,8 @@ function App() {
     const results: StartZoomMeetingReturn = await window.electronAPI?.startZoomMeeting();
     if (results?.meetingLaunched) {
       setIsLoading(false);
-    } else {
+    } 
+    if (results?.meetingLaunched === false){
       setIsLoading(false);
       meetingFailedToast(results?.errorMsg);
     }

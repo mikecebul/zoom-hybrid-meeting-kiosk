@@ -1,5 +1,4 @@
 import axios from "axios";
-import fs from "fs";
 import open from "open";
 
 export async function launchBODZoomMeeting({access_token}: {access_token: string}) {
@@ -17,7 +16,7 @@ export async function launchBODZoomMeeting({access_token}: {access_token: string
     });
     if (response.status === 200) {
       const startUrl = response.data["start_url"];
-      console.log("Start Url:", startUrl);
+      // console.log("Start Url:", startUrl);
       open(startUrl);
     }
     return true;
@@ -25,10 +24,10 @@ export async function launchBODZoomMeeting({access_token}: {access_token: string
     console.error("Error starting the meeting:", error);
 
     if (process.platform === "darwin") {
-      fs.writeFileSync(
-        "/Users/Shared/error-logs/start-meeting-error-log.txt",
-        `Caught exception in startZoomMeeting: ${error}\n`
-      );
+      // fs.writeFileSync(
+      //   "/Users/Shared/error-logs/start-meeting-error-log.txt",
+      //   `Caught exception in startZoomMeeting: ${error}\n`
+      // );
     }
     return false;
   }
