@@ -2,7 +2,7 @@ import axios from "axios";
 import fs from "fs";
 import type { ZoomToken } from "../../utils/types";
 import { exec } from "child_process";
-import { getISODate } from "electron/utils/getISODate";
+import { getISODate } from "../../utils/getISODate";
 
 export async function launchZoomMeeting(token: ZoomToken) {
   const meetingId = import.meta.env.VITE_MEETING_MEETING_ID;

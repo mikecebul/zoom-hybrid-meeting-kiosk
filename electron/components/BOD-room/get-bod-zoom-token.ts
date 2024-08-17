@@ -1,6 +1,6 @@
 import axios from "axios";
 import fs from "fs";
-import { getISODate } from "electron/utils/getISODate";
+import { getISODate } from "../../utils/getISODate";
 
 export async function getBODZoomToken() {
   const accountId = import.meta.env.VITE_S2S_BOD_ACCOUNT_ID;

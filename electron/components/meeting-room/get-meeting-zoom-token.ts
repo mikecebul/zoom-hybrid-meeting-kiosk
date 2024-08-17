@@ -1,7 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import type { ZoomToken } from "../../utils/types";
-import { getISODate } from "electron/utils/getISODate";
+import { getISODate } from "../../utils/getISODate";
 
 export async function getMeetingZoomToken(): Promise<ZoomToken> {
   const accountId = import.meta.env.VITE_S2S_MEETING_ACCOUNT_ID;
