@@ -73,6 +73,7 @@ app.whenReady().then(() => {
   ipcMain.handle("start-zoom-meeting", async () => {
     if (win) {
       const result = await startZoomMeeting(win);
+      activeMeeting = result.activeMeeting;
       return result;
     }
   });
@@ -86,12 +87,16 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on("meeting-ended", () => {
+  
     if (win && activeMeeting) {
       activeMeeting = false;
       win.restore();
       win.show();
       win.setFullScreen(true);
+  
       killApplications(["Google Chrome", "zoom.us", "Safari"]);
+    } else {
+      console.log("No active meeting or window not initialized");
     }
   });
 

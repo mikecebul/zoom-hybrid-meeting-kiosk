@@ -35,16 +35,14 @@ app.post("/meeting-ended", (req, res) => {
         },
         status: 200,
       };
-
       res.status(response.status).json(response.message);
     } else {
       response = {
         message: "Authorized request to Zoom Meeting Webhook.",
         status: 200,
       };
-
       res.status(response.status).json(response);
-
+      
       // Business logic here, e.g., make API request to Zoom or 3rd party
       ipcMain.emit("meeting-ended");
     }

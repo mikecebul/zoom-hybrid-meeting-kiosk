@@ -29,7 +29,7 @@ export async function getBODZoomToken() {
       return undefined;
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
+    // console.error("Error fetching data:", error);
 
     if (process.platform === "darwin") {
       // fs.writeFileSync(
