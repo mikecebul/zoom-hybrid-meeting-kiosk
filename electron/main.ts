@@ -4,7 +4,6 @@ import "./server";
 import { killApplications } from "./utils/kill-applications";
 import { startZoomMeeting } from "./components/meeting-room/startZoomMeeting";
 import { startBODZoomMeeting } from "./components/BOD-room/startBODZoomMeeting";
-import { StartZoomMeetingReturn } from "./utils/types";
 
 // The built directory structure
 //
