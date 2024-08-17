@@ -25,7 +25,7 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import("electron").IpcRenderer;
   electronAPI?: {
-    startZoomMeeting: () => Promise<boolean>;
+    startZoomMeeting: () => Promise<T>;
     startBODZoomMeeting: () => Promise<boolean>;
     openNAReadings: () => Promise<boolean>;
   };

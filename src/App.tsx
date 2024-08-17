@@ -6,28 +6,29 @@ import { Loader2 } from "lucide-react";
 import "./main.css";
 import { Toaster } from "./components/ui/toaster";
 import { useToast } from "./components/ui/use-toast";
+import { StartZoomMeetingReturn } from "electron/utils/types";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  function meetingFailedToast() {
+  function meetingFailedToast(message?: string) {
     setIsLoading(false);
     toast({
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
-      description: "Please try again.",
+      description: `${message || "An unexpected error occurred."} Please try again.`,
     });
   }
 
   const startMeeting = async () => {
     setIsLoading(true);
-    const meetingStarted = await window.electronAPI?.startZoomMeeting();
-    if (meetingStarted) {
+    const results: StartZoomMeetingReturn = await window.electronAPI?.startZoomMeeting();
+    if (results?.meetingLaunched) {
       setIsLoading(false);
     } else {
       setIsLoading(false);
-      meetingFailedToast();
+      meetingFailedToast(results?.errorMsg);
     }
   };
 

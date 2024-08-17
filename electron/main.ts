@@ -4,6 +4,7 @@ import "./server";
 import { killApplications } from "./utils/kill-applications";
 import { startZoomMeeting } from "./components/meeting-room/startZoomMeeting";
 import { startBODZoomMeeting } from "./components/BOD-room/startBODZoomMeeting";
+import { StartZoomMeetingReturn } from "./utils/types";
 
 // The built directory structure
 //
@@ -73,8 +74,7 @@ app.whenReady().then(() => {
   ipcMain.handle("start-zoom-meeting", async () => {
     if (win) {
       const result = await startZoomMeeting(win);
-      activeMeeting = result.activeMeeting;
-      return result.meetingLaunched;
+      return result;
     }
   });
 
@@ -82,7 +82,7 @@ app.whenReady().then(() => {
     if (win) {
       const result = await startBODZoomMeeting(win);
       activeBODMeeting = result.activeBODMeeting;
-      return result.meetingLaunched;
+      return result;
     }
   });
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import type { IZoomToken } from "../../utils/types";
+import { getISODate } from "electron/utils/getISODate";
 
 export async function getBODZoomToken<T extends IZoomToken>(): Promise<
   T | undefined
@@ -37,7 +38,7 @@ export async function getBODZoomToken<T extends IZoomToken>(): Promise<
 
     if (process.platform === "darwin") {
       fs.writeFileSync(
-        "/home/mike/Documents/error-logs/get-meeting-zoom-token-error-log.txt",
+        `/home/Shared/error-logs/get-meeting-zoom-token-error-log-${getISODate()}.txt`,
         `Axios Error during getZoomToken: ${error}\n`
       );
       return undefined;

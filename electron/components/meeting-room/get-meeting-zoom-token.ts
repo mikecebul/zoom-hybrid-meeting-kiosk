@@ -1,10 +1,9 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../../utils/types";
+import type { ZoomToken } from "../../utils/types";
+import { getISODate } from "electron/utils/getISODate";
 
-export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
-  T | undefined
-> {
+export async function getMeetingZoomToken(): Promise<ZoomToken> {
   const accountId = import.meta.env.VITE_S2S_MEETING_ACCOUNT_ID;
   const clientId = import.meta.env.VITE_S2S_MEETING_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_S2S_MEETING_CLIENT_SECRET;
@@ -28,20 +27,17 @@ export async function getMeetingZoomToken<T extends IZoomToken>(): Promise<
 
     if (response.status === 200) {
       console.log("Token", response.data);
-      return response.data;
-    } else {
-      console.log(`Failed to fetch, status: ${response.status}`);
-      return undefined;
+      return {success: true, access_token: response.data}
     }
   } catch (error) {
     console.error("Error fetching data:", error);
 
     if (process.platform === "darwin") {
       fs.writeFileSync(
-        "/home/mike/Documents/error-logs/get-meeting-zoom-token-error-log.txt",
+        `/home/Shared/error-logs/get-meeting-zoom-token-error-log-${getISODate()}.txt`,
         `Axios Error during getZoomToken: ${error}\n`
       );
-      return undefined;
     }
+    return {success: false, error: `Error getting meeting Zoom auth token.`}
   }
 }
