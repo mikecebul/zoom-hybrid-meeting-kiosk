@@ -1,11 +1,10 @@
 import axios from "axios";
-import { ZoomToken } from "electron/utils/types";
 import fs from "fs";
 import open from "open";
 
-export async function launchBODZoomMeeting<T extends ZoomToken>(token: T) {
+export async function launchBODZoomMeeting({access_token}: {access_token: string}) {
   const meetingId = import.meta.env.VITE_BOD_MEETING_ID;
-  const bearerToken = token ? token.access_token : "";
+  const bearerToken = access_token;
 
   const url = `https://api.zoom.us/v2/meetings/${meetingId}`;
 

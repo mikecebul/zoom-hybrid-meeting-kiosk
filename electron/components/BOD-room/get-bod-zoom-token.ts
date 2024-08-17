@@ -1,11 +1,8 @@
 import axios from "axios";
 import fs from "fs";
-import type { IZoomToken } from "../../utils/types";
 import { getISODate } from "electron/utils/getISODate";
 
-export async function getBODZoomToken<T extends IZoomToken>(): Promise<
-  T | undefined
-> {
+export async function getBODZoomToken() {
   const accountId = import.meta.env.VITE_S2S_BOD_ACCOUNT_ID;
   const clientId = import.meta.env.VITE_S2S_BOD_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_S2S_BOD_CLIENT_SECRET;
